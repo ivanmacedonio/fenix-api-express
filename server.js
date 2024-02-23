@@ -1,0 +1,96 @@
+import cors from 'cors';
+import express from 'express';
+import multer from 'multer';
+import dbconnect from './config.js';
+import productModel from './productModel.js';
+
+const start = () => {
+  const app = express();
+
+  const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, "uploads");
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.originalname);
+    },
+  });
+
+  const upload = multer({ storage });
+  const router = express.Router();
+
+  app.use(cors({
+    origin: 'http://localhost:5173',
+    methods: ['GET', 'POST'],
+    allowHeaders: ['Content-Type']
+  }));
+
+  app.use(express.json());
+  app.use(router);
+  app.use("/uploads", express.static("uploads"));
+  //PRODUCTS
+
+  router.get("/products", async (req, res) => {
+    try {
+      const products = await productModel.find({});
+      const productsWithImages = products.map((product) => ({
+        ...product.toJSON(),
+        image: `${req.protocol}://${req.get("host")}/uploads/${product.image.filename
+          }`,
+      }));
+      res.json({ products: productsWithImages });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send("Error obteniendo los productos");
+    }
+  });
+
+  router.post("/products", upload.single("image"), async (req, res) => {
+    try {
+      const { title, description, price, discount, available } = req.body;
+      const imagenProducto = req.file;
+
+      const newProduct = new productModel({
+        title,
+        description,
+        price,
+        discount,
+        available,
+        image: imagenProducto,
+      });
+      await newProduct.save();
+      res.sendStatus(201);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send("Error creando el producto...");
+    }
+  });
+
+  router.get("/products/:id", async (req, res) => {
+    const product = await productModel.findById(req.params.id);
+    const productWithImage = {
+      ...product.toJSON(),
+      image: `${req.protocol}://${req.get("host")}/uploads/${product.image.filename
+        }`,
+    };
+    res.json({ product: productWithImage });
+  });
+
+  router.delete("/products/:id", async (req, res) => {
+    try {
+      const product = productModel.findOneAndDelete(req.params.id);
+      res.sendStatus(200);
+    } catch (error) {
+      console.log(error);
+      res.status(404).send("Producto no encontrado");
+    }
+  });
+
+  
+  dbconnect();
+  app.listen(3000, () => {
+    console.log(`Server up`);
+  });
+
+}
+start()
