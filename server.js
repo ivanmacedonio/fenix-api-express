@@ -21,7 +21,7 @@ const start = () => {
 
   app.use(cors({
     origin: 'http://localhost:5173',
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST', 'DELETE'],
     allowHeaders: ['Content-Type']
   }));
 
@@ -59,6 +59,7 @@ const start = () => {
         image: imagenProducto,
       });
       await newProduct.save();
+      console.log(imagenProducto)
       res.sendStatus(201);
     } catch (error) {
       console.log(error);
@@ -67,18 +68,28 @@ const start = () => {
   });
 
   router.get("/products/:id", async (req, res) => {
-    const product = await productModel.findById(req.params.id);
-    const productWithImage = {
-      ...product.toJSON(),
-      image: `${req.protocol}://${req.get("host")}/uploads/${product.image.filename
-        }`,
-    };
-    res.json({ product: productWithImage });
+    try{
+      const product = await productModel.findById(req.params.id);
+      if(!product){
+        return res.status(404).send('El producto no existe')
+      }
+      const productWithImage = {
+        ...product.toJSON(),
+        image: `${req.protocol}://${req.get("host")}/uploads/${product.image.filename
+          }`,
+      };
+      res.json({ product: productWithImage });
+    } catch (error){
+      console.log(error)
+      res.status(404).send('CATCH ERROR')
+    }
+    
   });
 
   router.delete("/products/:id", async (req, res) => {
     try {
-      const product = productModel.findOneAndDelete(req.params.id);
+      const product = await productModel.findOneAndDelete({_id: req.params.id});
+      console.log(`Producto ${product} eliminado!`)
       res.sendStatus(200);
     } catch (error) {
       console.log(error);

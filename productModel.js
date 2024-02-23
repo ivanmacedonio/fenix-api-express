@@ -20,6 +20,7 @@ const productSchema = mongoose.Schema({
   image: {
     filename: {
       type: String,
+      required: true
     },
   },
   available: {
