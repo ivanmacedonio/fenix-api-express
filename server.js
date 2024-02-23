@@ -20,7 +20,7 @@ const start = () => {
   const router = express.Router();
 
   app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: 'https://master--fenix-productos-economicos.netlify.app',
     methods: ['GET', 'POST', 'DELETE'],
     allowHeaders: ['Content-Type']
   }));
