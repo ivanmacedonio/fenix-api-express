@@ -50,7 +50,6 @@ const start = () => {
   router.post("/products", upload.single("image"), async (req, res) => {
     try {
       const { title, description, price, discount, available } = req.body;
-      console.log(imagenProducto)
       const imagenProducto = req.file;
       const newProduct = new productModel({
         title,
@@ -65,7 +64,7 @@ const start = () => {
       res.sendStatus(201);
     } catch (error) {
       console.log(error);
-      res.status(500).send("Error creando el producto...");
+      res.status(500).json(error);
     }
   });
 
@@ -77,8 +76,7 @@ const start = () => {
       }
       const productWithImage = {
         ...product.toJSON(),
-        image: `https://${req.get("host")}/uploads/${product.image.filename
-          }`,
+        image: `https://${req.get("host")}/uploads/${product.image.filename}`,
       };
       res.json({ product: productWithImage });
     } catch (error){
