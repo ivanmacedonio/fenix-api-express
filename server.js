@@ -37,7 +37,7 @@ const start = () => {
       const products = await productModel.find({});
       const productsWithImages = products.map((product) => ({
         ...product.toJSON(),
-        image: `${req.protocol}://${req.get("host")}/uploads/${product.image.filename
+        image: `https://${req.get("host")}/uploads/${product.image.filename
           }`,
       }));
       res.json({ products: productsWithImages });
@@ -50,8 +50,8 @@ const start = () => {
   router.post("/products", upload.single("image"), async (req, res) => {
     try {
       const { title, description, price, discount, available } = req.body;
+      console.log(imagenProducto)
       const imagenProducto = req.file;
-
       const newProduct = new productModel({
         title,
         description,
