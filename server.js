@@ -77,7 +77,7 @@ const start = () => {
       }
       const productWithImage = {
         ...product.toJSON(),
-        image: `${req.protocol}://${req.get("host")}/uploads/${product.image.filename
+        image: `https://${req.get("host")}/uploads/${product.image.filename
           }`,
       };
       res.json({ product: productWithImage });
@@ -98,7 +98,6 @@ const start = () => {
       res.status(404).send("Producto no encontrado");
     }
   });
-
   
   dbconnect();
   app.listen(3000, () => {
