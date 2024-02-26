@@ -19,12 +19,14 @@ const start = () => {
   const upload = multer({ storage });
   const router = express.Router();
 
-  app.use(cors({
-    origin: 'https://master--fenix-productos-economicos.netlify.app',
-    methods: ['GET', 'POST', 'DELETE'],
-    allowHeaders: ['Content-Type']
-  }));
+  // app.use(cors({
+  //   origin: 'https://master--fenix-productos-economicos.netlify.app',
+  //   methods: ['GET', 'POST', 'DELETE'],
+  //   allowHeaders: ['Content-Type']
+  // }));
 
+
+  app.use(cors());
   app.use(express.json());
   app.use(router);
   app.use("/uploads", express.static("uploads"));
