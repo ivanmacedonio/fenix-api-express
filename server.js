@@ -27,6 +27,7 @@ const start = () => {
 
 
   app.use(cors());
+  app.use(express.static('public', { maxAge: 0 }));
   app.use(express.json());
   app.use(router);
   app.use("/uploads", express.static("uploads"));
