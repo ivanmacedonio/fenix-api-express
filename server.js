@@ -66,24 +66,23 @@ const start = () => {
       res.status(500).json(error);
     }
   });
-
   router.get("/products/:id", async (req, res) => {
-    try{
+    try {
       const product = await productModel.findById(req.params.id);
-      if(!product){
-        return res.status(404).send('El producto no existe')
+      if (!product) {
+        return res.status(404).send('El producto no existe');
       }
       const productWithImage = {
         ...product.toJSON(),
-        image: `https://${req.get("host")}/uploads/${product.image.filename}`,
+        image: `https://${req.get("host")}/uploads/${product.image}`,
       };
       res.json({ product: productWithImage });
-    } catch (error){
-      console.log(error)
-      res.status(404).send('CATCH ERROR')
+    } catch (error) {
+      console.log(error);
+      res.status(500).send('Error obteniendo el producto');
     }
-    
   });
+  
 
   router.delete("/products/:id", async (req, res) => {
     try {
