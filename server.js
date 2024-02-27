@@ -38,8 +38,7 @@ const start = () => {
       const products = await productModel.find({});
       const productsWithImages = products.map((product) => ({
         ...product.toJSON(),
-        image: `https://${req.get("host")}/uploads/${product.image.filename
-          }`,
+        image: `https://${req.get("host")}/uploads/${product.image}`,
       }));
       res.json({ products: productsWithImages });
     } catch (error) {
@@ -51,17 +50,16 @@ const start = () => {
   router.post("/products", upload.single("image"), async (req, res) => {
     try {
       const { title, description, price, discount, available } = req.body;
-      const imagenProducto = req.file;
+      const imageName = req.file.originalname; // Obtén el nombre original de la imagen
       const newProduct = new productModel({
         title,
         description,
         price,
         discount,
         available,
-        image: imagenProducto,
+        image: imageName, // Guarda solo el nombre de la imagen
       });
       await newProduct.save();
-      console.log(imagenProducto)
       res.sendStatus(201);
     } catch (error) {
       console.log(error);

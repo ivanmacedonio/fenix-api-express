@@ -18,10 +18,8 @@ const productSchema = mongoose.Schema({
     required: false,
   },
   image: {
-    filename: {
-      type: String,
-      required: true
-    },
+    type: String,
+    required: true,
   },
   available: {
     type: Boolean,
