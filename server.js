@@ -8,8 +8,9 @@ const start = () => {
   dbconnect();
   const app = express();
   const router = express.Router();
-  app.use(router);
   app.use(cors());
+  app.use(router);
+  
 
 
   //PRODUCTS
