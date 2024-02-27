@@ -8,6 +8,8 @@ const start = () => {
   const app = express();
   const router = express.Router();
   app.use(router);
+  app.use(cors());
+
 
   //PRODUCTS
 
