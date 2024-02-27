@@ -1,3 +1,4 @@
+import cors from 'cors';
 import express from 'express';
 import dbconnect from './config.js';
 import productModel from './productModel.js';
