@@ -10,7 +10,7 @@ const productSchema = mongoose.Schema({
     required: false,
   },
   price: {
-    type: Number,
+    type: Decimal128,
     required: true,
   },
   discount: {
